@@ -1,9 +1,14 @@
-import { createRouteTable, createServer } from "./src/http/server.ts";
+import { createRouteTable, createServer, register } from "./src/http/server.ts";
+import { resizeRoute } from "./src/http/routes/resize.ts";
+import { rotateRoute } from "./src/http/routes/rotate.ts";
+import { convertRoute } from "./src/http/routes/convert.ts";
+import { watermarkRoute } from "./src/http/routes/watermark.ts";
 
 const routes = createRouteTable();
-
-// Routes are registered here as each phase lands — empty table today,
-// every request gets a clean 404 rather than a crash.
+register(routes, "POST", "/resize", resizeRoute);
+register(routes, "POST", "/rotate", rotateRoute);
+register(routes, "POST", "/convert", convertRoute);
+register(routes, "POST", "/watermark", watermarkRoute);
 
 if (import.meta.main) {
   const server = createServer(routes, Number(process.env.PORT ?? 3000));
