@@ -2,15 +2,7 @@ import type { RouteHandler } from "../server.ts";
 import { readLimitedFormData } from "../uploadLimit.ts";
 import { batchProcess } from "../../archive/batch.ts";
 import { isSupportedOutputFormat } from "../../image/process.ts";
-import { badRequest, parseFit, parseIntParam, parseQuality, unsupportedFormat } from "./_shared.ts";
-
-async function readArchiveField(formData: FormData): Promise<Uint8Array> {
-  const file = formData.get("archive");
-  if (!(file instanceof File)) {
-    throw new Error('missing or invalid "archive" field — expected a file upload');
-  }
-  return new Uint8Array(await file.arrayBuffer());
-}
+import { badRequest, parseFit, parseIntParam, parseQuality, readArchiveField, unsupportedFormat } from "./_shared.ts";
 
 /**
  * POST /batch — the one endpoint that only makes sense with both

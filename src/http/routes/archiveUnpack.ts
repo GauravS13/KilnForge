@@ -1,15 +1,7 @@
 import type { RouteHandler } from "../server.ts";
 import { readLimitedFormData } from "../uploadLimit.ts";
 import { unpackArchive } from "../../archive/unpack.ts";
-import { badRequest } from "./_shared.ts";
-
-async function readArchiveField(formData: FormData): Promise<Uint8Array> {
-  const file = formData.get("archive");
-  if (!(file instanceof File)) {
-    throw new Error('missing or invalid "archive" field — expected a file upload');
-  }
-  return new Uint8Array(await file.arrayBuffer());
-}
+import { badRequest, readArchiveField } from "./_shared.ts";
 
 /**
  * Default: JSON listing of every entry (name + size), archive-bomb-

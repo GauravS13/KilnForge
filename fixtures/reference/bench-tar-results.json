@@ -1,0 +1,23 @@
+{
+  "bunVersion": "1.4.0",
+  "pack": {
+    "kilnforge": {
+      "meanMs": 0.11,
+      "medianMs": 0.11
+    },
+    "tar": {
+      "meanMs": 0.09,
+      "medianMs": 0.06
+    }
+  },
+  "unpack": {
+    "kilnforge": {
+      "meanMs": 0.22,
+      "medianMs": 0.09
+    },
+    "tar": {
+      "meanMs": 9.18,
+      "medianMs": 8.87
+    }
+  }
+}

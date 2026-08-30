@@ -1,0 +1,37 @@
+{
+  "images/resize-medium-to-20x20-fill": {
+    "sha256": "c52b936fb3674d91e570f522ca3087d18636c9204234733fa03aa93f4da3a403",
+    "width": 20,
+    "height": 20
+  },
+  "images/resize-medium-to-20-contain": {
+    "sha256": "689c266049caf5308c1ce8ab257312493464362e5cb212e3f53badfee44a7c58",
+    "width": 20,
+    "height": 15
+  },
+  "images/resize-large-to-cover-30x30": {
+    "sha256": "0c66e60f1ad338fb11c9cbb95922eb352ff7a8551785138394bdb4ecf446cbd5",
+    "width": 30,
+    "height": 30
+  },
+  "images/convert-photo-to-webp": {
+    "sha256": "89cf3c1f82c6a2593ed7d191e1cff8d6e049fad91ca3259955d82bbe7b961200",
+    "width": 48,
+    "height": 48
+  },
+  "images/convert-alpha-to-png": {
+    "sha256": "39ea61246e56281aaaa5aba872ffb33f89e611243b4fc0e2b81901140ac1dbed",
+    "width": 32,
+    "height": 32
+  },
+  "images/rotate90-portrait": {
+    "sha256": "8eda02964559010de7d4815cea8d9a11f95847e08843a7071862134dc254c9d9",
+    "width": 40,
+    "height": 20
+  },
+  "archives/reference.tar": {
+    "sha256": "3ecc4c48a8fe8456e30c86610c396a237b3203d6e57660c2e74d35c88842c9ec",
+    "width": 0,
+    "height": 0
+  }
+}

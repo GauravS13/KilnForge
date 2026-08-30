@@ -1,6 +1,14 @@
 import { isSupportedOutputFormat, type Fit } from "../../image/process.ts";
 import { loadImage } from "../../image/loadImage.ts";
 
+export async function readArchiveField(formData: FormData, fieldName = "archive"): Promise<Uint8Array> {
+  const file = formData.get(fieldName);
+  if (!(file instanceof File)) {
+    throw new Error(`missing or invalid "${fieldName}" field — expected a file upload`);
+  }
+  return new Uint8Array(await file.arrayBuffer());
+}
+
 export const MIME_BY_FORMAT: Record<string, string> = {
   jpeg: "image/jpeg",
   png: "image/png",

@@ -10,6 +10,9 @@ import { metricsRoute } from "./src/http/routes/metrics.ts";
 import { archivePackRoute } from "./src/http/routes/archivePack.ts";
 import { archiveUnpackRoute } from "./src/http/routes/archiveUnpack.ts";
 import { batchRoute } from "./src/http/routes/batch.ts";
+import { buildProofJsonRoute } from "./src/http/routes/buildProofJson.ts";
+import { stdlibMdRoute } from "./src/http/routes/stdlibMd.ts";
+import { demoPageRoute } from "./src/http/demoPage.ts";
 import { TokenBucketRateLimiter } from "./src/http/rateLimit.ts";
 import { registerGracefulShutdown } from "./src/http/shutdown.ts";
 
@@ -24,6 +27,9 @@ register(routes, "GET", "/metrics", metricsRoute);
 register(routes, "POST", "/archive/pack", archivePackRoute);
 register(routes, "POST", "/archive/unpack", archiveUnpackRoute);
 register(routes, "POST", "/batch", batchRoute);
+register(routes, "GET", "/build-proof.json", buildProofJsonRoute);
+register(routes, "GET", "/stdlib.md", stdlibMdRoute);
+register(routes, "GET", "/", demoPageRoute);
 registerPrefix(routes, "GET", "/t/", transformUrlRoute);
 
 const rateLimiter = new TokenBucketRateLimiter({
