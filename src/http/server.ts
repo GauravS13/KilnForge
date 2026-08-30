@@ -48,6 +48,8 @@ const STATUS_BY_ERROR_NAME: Record<string, number> = {
   DecompressionBombError: 413,
   UnrecognizedImageFormatError: 400,
   SsrfBlockedError: 403,
+  ArchiveBombError: 413,
+  UnsafeArchiveEntryError: 400,
 };
 
 function statusForError(err: unknown): number {
