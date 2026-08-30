@@ -1,0 +1,29 @@
+{
+  "name": "kilnforge",
+  "version": "0.1.0",
+  "description": "Image resize/rotate/convert/watermark + archive service over HTTP, built entirely on Bun's native Image and Archive APIs. Zero third-party runtime dependencies.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "bun": ">=1.4.0"
+  },
+  "scripts": {
+    "start": "bun index.ts",
+    "dev": "bun --hot index.ts",
+    "verify": "bun run scripts/verify-harness.ts",
+    "test": "bun test",
+    "test:golden": "bun test tests/golden",
+    "test:fuzz": "bun test tests/fuzz",
+    "test:concurrency": "bun test tests/concurrency",
+    "test:negative": "bun test tests/negative",
+    "fixtures:gen": "bun run scripts/gen-fixtures.ts",
+    "bench:sharp": "bun run scripts/bench-sharp.ts",
+    "bench:tar": "bun run scripts/bench-tar.ts",
+    "proof:deps": "bun run scripts/deps-proof.ts",
+    "proof:build": "bash scripts/build-proof.sh"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "^1.4.0"
+  }
+}

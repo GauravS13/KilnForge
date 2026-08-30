@@ -1,0 +1,10 @@
+node_modules/
+bin/
+dist/
+/kilnforge
+/kilnforge.exe
+kilnforge-*
+*.test
+*.prof
+coverage.*
+*.log
