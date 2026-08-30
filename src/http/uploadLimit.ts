@@ -1,3 +1,6 @@
+import { assertNotDecompressionBomb } from "../image/bomb.ts";
+import { assertRecognizedImageFormat } from "../image/magicBytes.ts";
+
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024; // 25MB
 
 export class UploadTooLargeError extends Error {
@@ -59,4 +62,24 @@ export async function readImageField(formData: FormData, fieldName: string): Pro
     throw new Error(`missing or invalid "${fieldName}" field — expected a file upload`);
   }
   return new Uint8Array(await file.arrayBuffer());
+}
+
+/**
+ * Reads an image field with the two byte-level guards applied, in order:
+ * magic-byte validation first (assertRecognizedImageFormat — never trust
+ * Content-Type or filename), then the decompression-bomb dimension check
+ * (assertNotDecompressionBomb — header-only, rejects before Bun.Image is
+ * ever called). Both operate on bytes already captured under the
+ * streaming size cap in readLimitedFormData, so a request can't bypass
+ * either guard by exploiting the size limit's own read path.
+ */
+export async function readAndValidateImageField(
+  formData: FormData,
+  fieldName: string,
+  maxMegapixels?: number,
+): Promise<Uint8Array> {
+  const bytes = await readImageField(formData, fieldName);
+  assertRecognizedImageFormat(bytes);
+  assertNotDecompressionBomb(bytes, maxMegapixels);
+  return bytes;
 }

@@ -1,17 +1,33 @@
-import { createRouteTable, createServer, register } from "./src/http/server.ts";
+import { createRouteTable, createServer, register, registerPrefix } from "./src/http/server.ts";
 import { resizeRoute } from "./src/http/routes/resize.ts";
 import { rotateRoute } from "./src/http/routes/rotate.ts";
 import { convertRoute } from "./src/http/routes/convert.ts";
 import { watermarkRoute } from "./src/http/routes/watermark.ts";
+import { srcsetRoute } from "./src/http/routes/srcset.ts";
+import { transformUrlRoute } from "./src/http/routes/transformUrl.ts";
+import { capabilitiesRoute } from "./src/http/routes/capabilities.ts";
+import { metricsRoute } from "./src/http/routes/metrics.ts";
+import { TokenBucketRateLimiter } from "./src/http/rateLimit.ts";
+import { registerGracefulShutdown } from "./src/http/shutdown.ts";
 
 const routes = createRouteTable();
 register(routes, "POST", "/resize", resizeRoute);
 register(routes, "POST", "/rotate", rotateRoute);
 register(routes, "POST", "/convert", convertRoute);
 register(routes, "POST", "/watermark", watermarkRoute);
+register(routes, "POST", "/srcset", srcsetRoute);
+register(routes, "GET", "/capabilities", capabilitiesRoute);
+register(routes, "GET", "/metrics", metricsRoute);
+registerPrefix(routes, "GET", "/t/", transformUrlRoute);
+
+const rateLimiter = new TokenBucketRateLimiter({
+  capacity: Number(process.env.RATE_LIMIT_CAPACITY ?? 60),
+  refillPerSecond: Number(process.env.RATE_LIMIT_REFILL_PER_SECOND ?? 1),
+});
 
 if (import.meta.main) {
-  const server = createServer(routes, Number(process.env.PORT ?? 3000));
+  const server = createServer(routes, Number(process.env.PORT ?? 3000), { rateLimiter });
+  registerGracefulShutdown(server);
   console.log(`kilnforge listening on http://localhost:${server.port}`);
 }
 

@@ -1,5 +1,5 @@
 import type { RouteHandler } from "../server.ts";
-import { readLimitedFormData, readImageField } from "../uploadLimit.ts";
+import { readLimitedFormData, readAndValidateImageField } from "../uploadLimit.ts";
 import { loadImage } from "../../image/loadImage.ts";
 import { toRGBA, fromRGBA } from "../../image/rawPixel.ts";
 import { compositeWatermark, type Position } from "../../image/watermark.ts";
@@ -69,12 +69,12 @@ export const watermarkRoute: RouteHandler = async (req) => {
   if (!Number.isFinite(scale) || scale <= 0) return badRequest("scale", `must be a positive number, got "${scaleRaw}"`);
 
   const formData = await readLimitedFormData(req);
-  const baseBytes = await readImageField(formData, "image");
+  const baseBytes = await readAndValidateImageField(formData, "image");
   const baseRgba = await toRGBA(loadImage(baseBytes));
 
   const markRgba = text
     ? rasterizeText(text, { color, scale })
-    : await toRGBA(loadImage(await readImageField(formData, "logo")));
+    : await toRGBA(loadImage(await readAndValidateImageField(formData, "logo")));
 
   const composited = compositeWatermark(baseRgba, markRgba, { position, x, y, opacity });
   const compositeBytes = fromRGBA(composited);

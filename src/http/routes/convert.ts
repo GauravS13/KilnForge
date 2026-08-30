@@ -1,5 +1,5 @@
 import type { RouteHandler } from "../server.ts";
-import { readLimitedFormData, readImageField } from "../uploadLimit.ts";
+import { readLimitedFormData, readAndValidateImageField } from "../uploadLimit.ts";
 import { processImage, isSupportedOutputFormat } from "../../image/process.ts";
 import { badRequest, MIME_BY_FORMAT, parseQuality, unsupportedFormat } from "./_shared.ts";
 
@@ -19,7 +19,7 @@ export const convertRoute: RouteHandler = async (req) => {
   }
 
   const formData = await readLimitedFormData(req);
-  const bytes = await readImageField(formData, "image");
+  const bytes = await readAndValidateImageField(formData, "image");
 
   const out = await processImage(bytes, { format, quality });
   return new Response(out, { headers: { "content-type": MIME_BY_FORMAT[format]! } });

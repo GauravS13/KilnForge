@@ -63,6 +63,31 @@ describe("POST /resize", () => {
     expect(body.error).not.toContain(" at "); // no stack trace text leaking through
   });
 
+  test("400s on an upload that isn't a recognized image format at all (magic-byte guard)", async () => {
+    const t = startTestServer("POST", "/resize", resizeRoute);
+    stop = t.stop;
+    const notAnImage = new TextEncoder().encode("<html>not an image</html>");
+    const fd = imageFormData("image", notAnImage);
+    const res = await fetch(`${t.url}?w=4`, { method: "POST", body: fd });
+    expect(res.status).toBe(400);
+  });
+
+  test("413s on a header declaring dimensions over the decompression-bomb cap", async () => {
+    const t = startTestServer("POST", "/resize", resizeRoute);
+    stop = t.stop;
+    // A real PNG signature + IHDR declaring an enormous size, no valid
+    // IDAT needed — the bomb guard rejects before decode is ever
+    // attempted, so this never gets far enough to need real pixel data.
+    const fakeHeader = new Uint8Array(24);
+    fakeHeader.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], 0);
+    fakeHeader.set(new TextEncoder().encode("IHDR"), 12);
+    new DataView(fakeHeader.buffer).setUint32(16, 50000, false);
+    new DataView(fakeHeader.buffer).setUint32(20, 50000, false);
+    const fd = imageFormData("image", fakeHeader);
+    const res = await fetch(`${t.url}?w=4`, { method: "POST", body: fd });
+    expect(res.status).toBe(413);
+  });
+
   test("defaults output format to the input's own format when not specified", async () => {
     const t = startTestServer("POST", "/resize", resizeRoute);
     stop = t.stop;

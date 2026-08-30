@@ -1,5 +1,5 @@
 import type { RouteHandler } from "../server.ts";
-import { readLimitedFormData, readImageField } from "../uploadLimit.ts";
+import { readLimitedFormData, readAndValidateImageField } from "../uploadLimit.ts";
 import { processImage, isSupportedOutputFormat } from "../../image/process.ts";
 import {
   badRequest,
@@ -28,7 +28,7 @@ export const resizeRoute: RouteHandler = async (req) => {
   }
 
   const formData = await readLimitedFormData(req);
-  const bytes = await readImageField(formData, "image");
+  const bytes = await readAndValidateImageField(formData, "image");
 
   const format = url.searchParams.get("format") ?? (await resolveDefaultFormat(bytes));
   if (!isSupportedOutputFormat(format)) return unsupportedFormat(format);
